@@ -6,5 +6,12 @@ RUN apt-get update && \
     apt-get -y install software-properties-common && \
     pip install --upgrade pip
 
-# Install Basic Packages
+# requirements.txtがある場合、そのファイルをコンテナ内にコピーしてからインストール
+COPY requirements.txt /workspace/requirements.txt
+
+# cudfのインストールを無効にして依存関係をインストール
+RUN sed -i '/cudf/d' /workspace/requirements.txt && \
+    pip install -r /workspace/requirements.txt
+
+# JupyterとIPythonカーネルをインストール
 RUN pip install ipykernel jupyter
